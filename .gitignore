@@ -1,0 +1,21 @@
+# Entornos virtuales
+.venv/
+venv/
+env/
+
+# Cache de Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Bases de datos generadas en tiempo de ejecucion
+*.db
+
+# Sistema operativo / editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# NOTA: la carpeta reports/ SI se versiona porque el reporte HTML y las
+# capturas automaticas son entregables obligatorios de la tarea.
