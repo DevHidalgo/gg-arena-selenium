@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block titulo %}Iniciar sesion | GG Arena{% endblock %}
+
+{% block contenido %}
+<section class="tarjeta tarjeta-login">
+  <h2 id="titulo-login">Iniciar sesion</h2>
+  <p class="sutil">Acceso al panel de administracion de torneos.</p>
+
+  {% if errores %}
+  <div id="error-login" data-test="error-login" class="alerta alerta-error">
+    <ul>
+      {% for e in errores %}<li>{{ e }}</li>{% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <form id="form-login" method="post" novalidate>
+    <label for="usuario">Usuario</label>
+    <input id="usuario" name="usuario" type="text" value="{{ usuario }}" autocomplete="off"
+           placeholder="admin" data-test="input-usuario">
+
+    <label for="clave">Contrasena</label>
+    <input id="clave" name="clave" type="password" autocomplete="off"
+           placeholder="********" data-test="input-clave">
+
+    <button id="btn-ingresar" type="submit" class="btn btn-primario" data-test="btn-ingresar">
+      Ingresar
+    </button>
+  </form>
+
+  <div class="credenciales">
+    <strong>Credenciales de prueba</strong>
+    <span>admin / Arena2026*</span>
+    <span>arbitro / Referee2026*</span>
+  </div>
+</section>
+{% endblock %}

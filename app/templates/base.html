@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block titulo %}GG Arena{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='estilos.css') }}">
+</head>
+<body>
+  <header class="barra">
+    <div class="marca">
+      <span class="logo">GG</span>
+      <div>
+        <h1>GG Arena</h1>
+        <p>Gestion de Torneos eSports</p>
+      </div>
+    </div>
+    {% if usuario_activo %}
+    <nav class="nav">
+      <a id="nav-jugadores" href="{{ url_for('listado_jugadores') }}">Jugadores</a>
+      <span id="usuario-activo" class="usuario">{{ usuario_activo }}</span>
+      <a id="btn-logout" class="btn btn-ghost" href="{{ url_for('logout') }}">Cerrar sesion</a>
+    </nav>
+    {% endif %}
+  </header>
+
+  <main class="contenido">
+    {% with mensajes = get_flashed_messages(with_categories=true) %}
+      {% if mensajes %}
+        {% for categoria, texto in mensajes %}
+        <div id="mensaje-flash" data-test="flash" class="alerta alerta-{{ categoria }}">{{ texto }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% block contenido %}{% endblock %}
+  </main>
+
+  <footer class="pie">
+    <span>GG Arena &middot; Proyecto base para pruebas automatizadas con Selenium</span>
+  </footer>
+</body>
+</html>

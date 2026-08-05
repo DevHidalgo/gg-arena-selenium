@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block titulo %}{{ 'Editar' if modo == 'editar' else 'Nuevo' }} jugador | GG Arena{% endblock %}
+
+{% block contenido %}
+<section class="tarjeta">
+  <h2 id="titulo-formulario" data-test="titulo-formulario">
+    {{ 'Editar jugador' if modo == 'editar' else 'Registrar nuevo jugador' }}
+  </h2>
+  <p class="sutil">
+    Gamertag de 3 a 20 caracteres (letras, numeros y guion bajo). Puntos entre 0 y 10000.
+  </p>
+
+  {% if errores %}
+  <div id="errores-formulario" data-test="errores-formulario" class="alerta alerta-error">
+    <ul>
+      {% for e in errores %}<li class="error-item" data-test="error-item">{{ e }}</li>{% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <form id="form-jugador" method="post" novalidate>
+    <div class="rejilla">
+      <div>
+        <label for="gamertag">Gamertag *</label>
+        <input id="gamertag" name="gamertag" type="text" value="{{ datos.gamertag }}"
+               data-test="input-gamertag" autocomplete="off">
+      </div>
+      <div>
+        <label for="nombre_real">Nombre real *</label>
+        <input id="nombre_real" name="nombre_real" type="text" value="{{ datos.nombre_real }}"
+               data-test="input-nombre" autocomplete="off">
+      </div>
+      <div>
+        <label for="equipo">Equipo *</label>
+        <input id="equipo" name="equipo" type="text" value="{{ datos.equipo }}"
+               data-test="input-equipo" autocomplete="off">
+      </div>
+      <div>
+        <label for="puntos">Puntos de ranking *</label>
+        <input id="puntos" name="puntos" type="text" value="{{ datos.puntos }}"
+               data-test="input-puntos" autocomplete="off">
+      </div>
+      <div>
+        <label for="juego">Juego *</label>
+        <select id="juego" name="juego" data-test="select-juego">
+          <option value="">-- Seleccione --</option>
+          {% for j in juegos %}
+          <option value="{{ j }}" {% if datos.juego == j %}selected{% endif %}>{{ j }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label for="rango">Rango *</label>
+        <select id="rango" name="rango" data-test="select-rango">
+          <option value="">-- Seleccione --</option>
+          {% for r in rangos %}
+          <option value="{{ r }}" {% if datos.rango == r %}selected{% endif %}>{{ r }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div class="acciones-formulario">
+      <a id="btn-cancelar" class="btn btn-ghost" href="{{ url_for('listado_jugadores') }}"
+         data-test="btn-cancelar">Cancelar</a>
+      <button id="btn-guardar" type="submit" class="btn btn-primario" data-test="btn-guardar">
+        {{ 'Guardar cambios' if modo == 'editar' else 'Registrar jugador' }}
+      </button>
+    </div>
+  </form>
+</section>
+{% endblock %}

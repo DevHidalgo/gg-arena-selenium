@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block titulo %}Jugadores | GG Arena{% endblock %}
+
+{% block contenido %}
+<section class="tarjeta">
+  <div class="encabezado-seccion">
+    <div>
+      <h2 id="titulo-jugadores">Roster de jugadores</h2>
+      <p class="sutil">Administracion de participantes registrados en el circuito.</p>
+    </div>
+    <a id="btn-nuevo-jugador" class="btn btn-primario" href="{{ url_for('nuevo_jugador') }}"
+       data-test="btn-nuevo">+ Nuevo jugador</a>
+  </div>
+
+  <form id="form-busqueda" class="barra-busqueda" method="get" action="{{ url_for('listado_jugadores') }}">
+    <input id="input-busqueda" name="q" type="text" value="{{ busqueda }}"
+           placeholder="Buscar por gamertag, nombre o equipo" data-test="input-busqueda" autocomplete="off">
+    <button id="btn-buscar" type="submit" class="btn btn-secundario" data-test="btn-buscar">Buscar</button>
+    <a id="btn-limpiar" class="btn btn-ghost" href="{{ url_for('listado_jugadores') }}">Limpiar</a>
+  </form>
+
+  <p id="contador-jugadores" data-test="contador" class="contador">
+    Jugadores encontrados: <strong id="total-jugadores">{{ jugadores|length }}</strong>
+  </p>
+
+  {% if jugadores %}
+  <table id="tabla-jugadores" class="tabla" data-test="tabla-jugadores">
+    <thead>
+      <tr>
+        <th>Gamertag</th>
+        <th>Nombre real</th>
+        <th>Equipo</th>
+        <th>Juego</th>
+        <th>Rango</th>
+        <th>Puntos</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="cuerpo-tabla">
+      {% for j in jugadores %}
+      <tr id="jugador-{{ j.id }}" class="fila-jugador" data-test="fila-jugador" data-gamertag="{{ j.gamertag }}">
+        <td class="col-gamertag" data-test="celda-gamertag">{{ j.gamertag }}</td>
+        <td class="col-nombre">{{ j.nombre_real }}</td>
+        <td class="col-equipo">{{ j.equipo }}</td>
+        <td class="col-juego">{{ j.juego }}</td>
+        <td><span class="etiqueta">{{ j.rango }}</span></td>
+        <td class="col-puntos">{{ j.puntos }}</td>
+        <td class="acciones">
+          <a id="editar-{{ j.id }}" class="btn btn-mini" data-test="btn-editar"
+             href="{{ url_for('editar_jugador', jugador_id=j.id) }}">Editar</a>
+          <button id="eliminar-{{ j.id }}" type="button" class="btn btn-mini btn-peligro"
+                  data-test="btn-eliminar"
+                  data-id="{{ j.id }}" data-gamertag="{{ j.gamertag }}">Eliminar</button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p id="sin-resultados" data-test="sin-resultados" class="vacio">
+    No se encontraron jugadores que coincidan con la busqueda.
+  </p>
+  {% endif %}
+</section>
+
+<!-- Modal de confirmacion de eliminacion (no se usa window.confirm nativo) -->
+<div id="modal-eliminar" class="modal oculto" data-test="modal-eliminar" aria-hidden="true">
+  <div class="modal-caja">
+    <h3 id="modal-titulo">Confirmar eliminacion</h3>
+    <p id="modal-texto" data-test="modal-texto">Se eliminara el jugador seleccionado.</p>
+    <form id="form-eliminar" method="post">
+      <div class="modal-acciones">
+        <button id="btn-cancelar-eliminar" type="button" class="btn btn-ghost"
+                data-test="btn-cancelar-eliminar">Cancelar</button>
+        <button id="btn-confirmar-eliminar" type="submit" class="btn btn-peligro"
+                data-test="btn-confirmar-eliminar">Si, eliminar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var modal = document.getElementById('modal-eliminar');
+    var formulario = document.getElementById('form-eliminar');
+    var texto = document.getElementById('modal-texto');
+
+    document.querySelectorAll('[data-test="btn-eliminar"]').forEach(function (boton) {
+      boton.addEventListener('click', function () {
+        formulario.action = '/jugadores/' + boton.dataset.id + '/eliminar';
+        texto.textContent = 'Esta seguro de eliminar al jugador "' + boton.dataset.gamertag + '"? Esta accion no se puede deshacer.';
+        modal.classList.remove('oculto');
+        modal.setAttribute('aria-hidden', 'false');
+      });
+    });
+
+    document.getElementById('btn-cancelar-eliminar').addEventListener('click', function () {
+      modal.classList.add('oculto');
+      modal.setAttribute('aria-hidden', 'true');
+    });
+  })();
+</script>
+{% endblock %}
