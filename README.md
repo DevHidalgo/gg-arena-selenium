@@ -14,7 +14,7 @@ en **Python** bajo el patrón **Page Object Model**.
 | Entregable | Enlace |
 |---|---|
 | 🟢 Repositorio de código | *(este repositorio)* |
-| 🟡 Tablero de historias de usuario (Jira) | `PENDIENTE_JIRA` |
+| 🟡 Tablero de historias de usuario (Jira) | https://devhidalgo-qa.atlassian.net/jira/software/projects/SCRUM/boards/1 |
 | 🔵 Video demostrativo (YouTube) | `PENDIENTE_YOUTUBE` |
 | 📄 Reporte HTML de ejecución | [`reports/reporte_pruebas.html`](reports/reporte_pruebas.html) |
 | 📸 Capturas automáticas | [`reports/capturas/`](reports/capturas) |

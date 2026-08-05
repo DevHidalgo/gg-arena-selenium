@@ -1,8 +1,9 @@
 # Historias de Usuario — GG Arena
 
 > **Documento de trabajo.** El registro oficial de estas historias vive en el tablero de
-> **Jira** (ver enlace en el README). Este archivo existe únicamente para facilitar la
-> carga de la información en el tablero y mantener la trazabilidad con el código.
+> **Jira**: https://devhidalgo-qa.atlassian.net/jira/software/projects/SCRUM/boards/1
+> Este archivo existe únicamente para mantener la trazabilidad entre las historias del
+> tablero (SCRUM-6 a SCRUM-10) y los casos de prueba automatizados del repositorio.
 
 Proyecto: **GG Arena — Sistema de Gestión de Torneos eSports**
 Tipo de pruebas: automatizadas end-to-end con **Selenium WebDriver + pytest**
