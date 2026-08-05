@@ -1,0 +1,105 @@
+﻿Resumen,Tipo de incidencia,Descripcion,Estado,Etiquetas
+HU-01 Inicio de sesion en el panel,Historia,"Como administrador de torneos quiero iniciar sesion con mi usuario y contrasena para acceder de forma segura al panel de gestion de jugadores.
+
+CRITERIOS DE ACEPTACION
+1. Dado un usuario registrado, cuando ingresa usuario y contrasena validos y presiona Ingresar, el sistema lo redirige a /jugadores.
+2. El encabezado muestra el nombre del usuario autenticado y el boton Cerrar sesion.
+3. Se muestra el mensaje de bienvenida con el nombre del usuario.
+4. El listado de jugadores se carga completo despues del acceso.
+
+CRITERIOS DE RECHAZO
+1. Si la contrasena es incorrecta, se muestra 'Usuario o contrasena incorrectos' y no se otorga acceso.
+2. Si el usuario no existe, se muestra el mismo mensaje generico (no se revela si el usuario existe).
+3. Si el campo usuario o contrasena esta vacio, se muestra 'El usuario es obligatorio' / 'La contrasena es obligatoria'.
+4. Si un visitante sin sesion abre /jugadores directamente, es redirigido a /login con el aviso 'Debe iniciar sesion para acceder al panel'.
+
+CASOS DE PRUEBA AUTOMATIZADOS (tests/test_hu01_login.py) - 7 escenarios
+- CP-01 test_hu01_login_con_credenciales_validas -- CAMINO FELIZ
+- CP-02 test_hu01_login_con_credenciales_invalidas[clave incorrecta] -- NEGATIVA
+- CP-03 test_hu01_login_con_credenciales_invalidas[usuario inexistente] -- NEGATIVA
+- CP-04 test_hu01_acceso_directo_sin_sesion_es_bloqueado -- NEGATIVA
+- CP-05 test_hu01_login_con_campos_en_el_limite_vacio (3 variantes) -- LIMITES",Por hacer,"selenium,login,automatizacion"
+HU-02 Registrar un nuevo jugador (CREATE),Historia,"Como administrador de torneos quiero registrar nuevos jugadores en el roster para mantener actualizado el listado de participantes del circuito.
+
+CRITERIOS DE ACEPTACION
+1. El formulario permite capturar gamertag, nombre real, equipo, juego, rango y puntos.
+2. Al guardar datos validos, el sistema muestra 'Jugador <gamertag> registrado correctamente' y regresa al listado.
+3. El nuevo jugador aparece en la tabla con todos sus datos y el contador aumenta en 1.
+4. Se acepta un gamertag de 3 caracteres (minimo) y de 20 caracteres (maximo).
+5. Se aceptan 0 puntos (minimo) y 10000 puntos (maximo).
+
+CRITERIOS DE RECHAZO
+1. Si algun campo obligatorio esta vacio, se listan los errores y no se crea el registro.
+2. Si el gamertag ya existe, se muestra 'El gamertag <valor> ya esta registrado'.
+3. Si el gamertag contiene espacios o simbolos, se muestra 'El gamertag solo admite letras, numeros y guion bajo'.
+4. Si el gamertag tiene 2 o 21 caracteres, se rechaza indicando el limite.
+5. Si los puntos son -1 o 10001, se muestra 'Los puntos deben estar entre 0 y 10000'.
+
+CASOS DE PRUEBA AUTOMATIZADOS (tests/test_hu02_crear_jugador.py) - 10 escenarios
+- CP-06 test_hu02_registrar_jugador_valido -- CAMINO FELIZ
+- CP-07 test_hu02_no_registra_con_campos_obligatorios_vacios -- NEGATIVA
+- CP-08 test_hu02_no_permite_gamertag_duplicado -- NEGATIVA
+- CP-09 test_hu02_rechaza_gamertag_con_caracteres_no_permitidos -- NEGATIVA
+- CP-10 test_hu02_acepta_valores_en_el_limite (2 variantes) -- LIMITES
+- CP-11 test_hu02_rechaza_valores_fuera_del_limite (4 variantes) -- LIMITES",Por hacer,"selenium,crud,create,automatizacion"
+HU-03 Consultar y buscar jugadores (READ),Historia,"Como administrador de torneos quiero consultar y filtrar el roster para localizar rapidamente a un participante especifico.
+
+CRITERIOS DE ACEPTACION
+1. Al entrar al panel se muestran todos los jugadores registrados ordenados por puntos (descendente).
+2. El contador 'Jugadores encontrados' refleja el total exacto de filas mostradas.
+3. La busqueda filtra por gamertag, nombre real o equipo de forma parcial y sin distinguir mayusculas.
+4. El boton Limpiar restaura el listado completo.
+
+CRITERIOS DE RECHAZO
+1. Si el termino no coincide con ningun registro, se muestra 'No se encontraron jugadores que coincidan con la busqueda' y el contador queda en 0.
+2. Si el termino contiene caracteres especiales o etiquetas HTML, la aplicacion no debe fallar ni ejecutar codigo (el contenido se escapa).
+3. Un termino de longitud extrema (60 caracteres) devuelve 0 resultados sin errores de servidor.
+
+CASOS DE PRUEBA AUTOMATIZADOS (tests/test_hu03_consultar_jugadores.py) - 9 escenarios
+- CP-12 test_hu03_listado_muestra_el_roster_completo -- CAMINO FELIZ
+- CP-13 test_hu03_busqueda_devuelve_coincidencias (3 variantes) -- CAMINO FELIZ
+- CP-14 test_hu03_busqueda_sin_coincidencias_muestra_mensaje -- NEGATIVA
+- CP-15 test_hu03_busqueda_con_caracteres_especiales_no_falla -- NEGATIVA
+- CP-16 test_hu03_limites_de_longitud_en_la_busqueda (2 variantes) -- LIMITES
+- CP-17 test_hu03_busqueda_vacia_restaura_el_listado_completo -- LIMITES",Por hacer,"selenium,crud,read,automatizacion"
+HU-04 Actualizar los datos de un jugador (UPDATE),Historia,"Como administrador de torneos quiero editar la informacion de un jugador para corregir sus datos y mantener actualizado su puntaje de ranking.
+
+CRITERIOS DE ACEPTACION
+1. El boton Editar abre el formulario precargado con los datos actuales del jugador.
+2. Al guardar cambios validos se muestra 'Jugador <gamertag> actualizado correctamente'.
+3. Los cambios se reflejan de inmediato en la tabla del listado.
+4. El jugador puede conservar su propio gamertag sin que la validacion de unicidad lo bloquee.
+5. Se aceptan los valores frontera del ranking: 0 y 10000 puntos.
+
+CRITERIOS DE RECHAZO
+1. Si se intenta usar el gamertag de otro jugador, se muestra 'ya esta registrado' y no se guarda.
+2. Si el campo puntos no es numerico, se muestra 'Los puntos deben ser un numero entero' y el valor original se conserva.
+3. Si se vacia un campo obligatorio, se muestra el error correspondiente y no se guarda.
+4. Si los puntos son -1 o 10001, se rechaza y el valor original permanece intacto.
+
+CASOS DE PRUEBA AUTOMATIZADOS (tests/test_hu04_actualizar_jugador.py) - 9 escenarios
+- CP-18 test_hu04_actualizar_datos_de_un_jugador -- CAMINO FELIZ
+- CP-19 test_hu04_permite_conservar_el_mismo_gamertag -- CAMINO FELIZ
+- CP-20 test_hu04_no_permite_reutilizar_el_gamertag_de_otro -- NEGATIVA
+- CP-21 test_hu04_rechaza_puntos_no_numericos -- NEGATIVA
+- CP-22 test_hu04_no_permite_vaciar_un_campo_obligatorio -- NEGATIVA
+- CP-23 test_hu04_acepta_puntos_en_los_limites (2 variantes) -- LIMITES
+- CP-24 test_hu04_rechaza_puntos_fuera_de_los_limites (2 variantes) -- LIMITES",Por hacer,"selenium,crud,update,automatizacion"
+HU-05 Eliminar un jugador del roster (DELETE),Historia,"Como administrador de torneos quiero eliminar jugadores con una confirmacion previa para depurar el roster sin borrar registros por accidente.
+
+CRITERIOS DE ACEPTACION
+1. El boton Eliminar abre un modal de confirmacion que menciona el gamertag afectado.
+2. Al confirmar, se muestra 'Jugador <gamertag> eliminado correctamente' y la fila desaparece.
+3. El contador de jugadores disminuye en 1.
+4. Es posible eliminar todos los registros hasta dejar el roster vacio, mostrando el mensaje de listado vacio.
+
+CRITERIOS DE RECHAZO
+1. Si el usuario presiona Cancelar, el modal se cierra y el jugador permanece en el roster.
+2. Si se intenta eliminar un identificador inexistente, la aplicacion muestra 'El jugador solicitado no existe' sin romperse ni alterar el total.
+
+CASOS DE PRUEBA AUTOMATIZADOS (tests/test_hu05_eliminar_jugador.py) - 5 escenarios
+- CP-25 test_hu05_eliminar_jugador_confirmando -- CAMINO FELIZ
+- CP-26 test_hu05_cancelar_no_elimina_al_jugador -- NEGATIVA
+- CP-27 test_hu05_eliminar_un_id_inexistente_muestra_aviso -- NEGATIVA
+- CP-28 test_hu05_eliminar_todos_deja_el_roster_vacio -- LIMITES
+- CP-29 test_hu05_eliminar_el_ultimo_resultado_de_una_busqueda -- LIMITES",Por hacer,"selenium,crud,delete,automatizacion"
